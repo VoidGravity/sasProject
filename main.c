@@ -32,7 +32,7 @@ if (logOPtions ==1) {
     scanf ("%s",logMail);
     printf ("\nPLease enter your password : ");
     scanf("%s",logPass);
-    //check if password matches the password either lid5l 9Bl or limsjl fdata, leve it for later
+    //check if password matches the password either lid5l 9Bl or limsjl fdata, leave it for later
     /*
     for (int i = 0; i<40;i++) {
         if (logMail[i]!=email[i]&&logPass[i]!=password[i]) {
@@ -77,8 +77,15 @@ if (logOPtions ==1) {
         switch (choice){
             case '1':
                 system ("cls");
-                printf ("________________________>>Add Task!<<_____________________________\n");break;
+                printf ("________________________>>Add Task!<<_____________________________\n");
+                printf ("\n\n\n");
+                printf ("Add the Title : ");
+                scanf ("%s")//ana hna , the idea is to create a 2d array and once you successfully scanned the tiitle , incriment the value of the collumn
 
+
+
+
+                break;
             case '2':
                 system ("cls");
                 printf ("________________________>>Edit Task!<<_____________________________\n");break;
