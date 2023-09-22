@@ -2,7 +2,7 @@
 #include <windows.h>
 #include <stdlib.h>
 #include <time.h>
-
+//use the char counter to count how many characters in the desc , make it usefull
 
 struct task {
 
@@ -263,7 +263,8 @@ if (logOPtions ==1) {
                 system ("cls");
                 printf ("________________________>>Show Task!<<_____________________________\n");
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    printf ("Choice 1 : sort alphabetically\n Choice 2 : sort by deadline \n Choice 3 : sort by priority \n Choice 4 : Show tasks whose deadline is in 3 days or less. ");
+                    printf ("Choice 1 : sort alphabetically\n Choice 2 : sort by deadline \n Choice 3 : sort by priority \n Choice 4 : sort by creation date \n Choice 5 : Show tasks whose deadline is in 3 days or less. \n My choice : ");
+                    sortOp:
                     scanf(" %c",&choice[3]);
                     switch (choice[6]) {
                         case '1':
@@ -271,11 +272,9 @@ if (logOPtions ==1) {
                         case '3':
                         case '4':
                         case '5':
-                        case '6':
-                        case '7':
                         default :
-                            printf ("Invalid Choice , try");
-
+                            printf ("Invalid Choice , Please try again : ");
+                            goto sortOp;
 
                             break;
 
