@@ -4,6 +4,49 @@
 #include <time.h>
 
 
+struct task {
+
+int id;
+int Prio;
+int deadLine[3];
+int deadLineStart [3];
+
+char tages[20];
+char title[40];
+char desc [400];
+char colab[20];
+
+
+};
+struct task holder;
+
+///////////////////:hado 5asahom 5Dma dok functions
+
+int TaskShow (){}
+int taskSave () {
+
+    FILE *taskfile = fopen ("Thetasks.txt","a");
+
+    if (taskfile==NULL) {
+
+            printf ("Error 404 : Failed to creat the task");
+            return 1;
+
+    }
+    srand (time(NULL));
+    holder.id=rand()%999+1000;
+        //fprintf (taskfile,"test file");
+    fprintf (taskfile," %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n %s\n %s\n %s\n %s\n ",holder.id,holder.deadLine[0],holder.deadLine[1],holder.deadLine[2],holder.deadLineStart[0],holder.deadLineStart[1],holder.deadLineStart[2],holder.Prio,holder.title,holder.desc,holder.tages,holder.colab);
+
+
+    fclose (taskfile);
+
+}
+
+
+
+
+
 int characterCounter (char holder[40],char breaker) {
 
  for (int i =0;i<40;i++) {
@@ -12,6 +55,12 @@ int characterCounter (char holder[40],char breaker) {
         }
  }
 }
+//i DO NOT NEED MULTIPLE STRUTRES FOR MULTIPLE TASKS ! BUT WHAT ABOUT USERS ? like 3d stuff ?
+
+
+
+
+
 
 
 int main () {
@@ -21,7 +70,8 @@ int validEmail=0;
 int validEmailDOtcom=0;
 int validEmailPreA =0;
 int existAcc = 1;
-char email[40],password[40],logMail[40],logPass[40],choice;
+char email[40],password[40],logMail[40],logPass[40],choice[5];
+
 
 
 printf (" 1-log in \n 2-Sing in \n");
@@ -72,15 +122,50 @@ if (logOPtions ==1) {
         printf ("||\t\t\t\t\t\t\t\t||\n");
         printf ("________________________>>Select a Choice!<<________________________\n");
         printf ("My choice is : ");
-        scanf (" %1c",&choice);
+        scanf (" %1c",&choice[0]);
 
-        switch (choice){
+        switch (choice[0]){
             case '1':
                 system ("cls");
                 printf ("________________________>>Add Task!<<_____________________________\n");
                 printf ("\n\n\n");
                 printf ("Add the Title : ");
-                scanf ("%s")//ana hna , the idea is to create a 2d array and once you successfully scanned the tiitle , incriment the value of the collumn
+                scanf (" %s",holder.title);
+                printf ("\nAdd the description : ");
+                scanf (" %s",holder.desc);
+                printf ("\nenter the deadline (Year/months/days) : ");
+                scanf (" %d/%d/%d",&holder.deadLine[0],&holder.deadLine[1],&holder.deadLine[2]);
+                printf ("\nenter a starting date (Year/months/days) or leave blank to start the task now : ");
+                scanf (" %d/%d/%d",&holder.deadLine[3],&holder.deadLine[4],&holder.deadLine[5]);
+                printf ("\nAdd a priority (or leave blank for low priority): \n choice 1 : critical priority \n choice 2 : high priority \n choice 3 : natural priority \n choice 4 : low priority\n");
+                scanf (" %d",&holder.Prio);
+                printf ("\nAdd tags : ");
+                scanf (" %s",holder.tages);
+                printf ("\nAdd a the colaborator's email (Leave Blank for no colaborator):");
+                scanf (" %s",holder.colab);
+
+                taskSave ();
+
+                printf ("\nThe task : %s was added succsefully\n choice A:Main menue \n choice B:exit the program \n my choice : ",holder.title);
+                scanf(" %1c",&choice[1]);
+
+                if (choice [1]=='A'||choice [1]=='a') goto menu;
+                else if (choice [1]=='B'||choice [1]=='b') return 0;
+                else printf ("invalid choice");
+
+
+
+
+
+                //if task is created
+
+
+
+
+
+                //ana hna , the idea is to create a 2d array and once you successfully scanned the tiitle , incriment the value of the collumn
+                //switched that Idea Up with a simple strcuture , turns out structures are pretty cool ,but don't worry arrays , daddy still love you
+
 
 
 
@@ -89,6 +174,7 @@ if (logOPtions ==1) {
             case '2':
                 system ("cls");
                 printf ("________________________>>Edit Task!<<_____________________________\n");break;
+
             case '3':
                 system ("cls");
                 printf ("________________________>>Delate Task!<<_____________________________\n");break;
