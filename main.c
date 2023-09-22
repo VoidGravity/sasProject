@@ -7,14 +7,14 @@
 struct task {
 
 int id;
-int Prio;
+char Prio;
 int deadLine[3];
 int deadLineStart [3];
 
 char tages[20];
 char title[40];
 char desc [400];
-char colab[20];
+char colab[40];
 
 
 };
@@ -70,7 +70,7 @@ int validEmail=0;
 int validEmailDOtcom=0;
 int validEmailPreA =0;
 int existAcc = 1;
-char email[40],password[40],logMail[40],logPass[40],choice[5];
+char email[40],password[40],logMail[40],logPass[40],choice[10];
 
 
 
@@ -122,36 +122,73 @@ if (logOPtions ==1) {
         printf ("||\t\t\t\t\t\t\t\t||\n");
         printf ("________________________>>Select a Choice!<<________________________\n");
         printf ("My choice is : ");
-        scanf (" %1c",&choice[0]);
+        scanf (" %s",&choice[0]);
 
         switch (choice[0]){
             case '1':
+                newtask:
                 system ("cls");
                 printf ("________________________>>Add Task!<<_____________________________\n");
                 printf ("\n\n\n");
                 printf ("Add the Title : ");
-                scanf (" %s",holder.title);
-                printf ("\nAdd the description : ");
-                scanf (" %s",holder.desc);
+                scanf (" %[^\n]s",holder.title);
+                printf ("\nAdd the description: ");
+                scanf (" %[^\n]s",holder.desc);
+
+
+                //here you do desctiption stuff
+
+
                 printf ("\nenter the deadline (Year/months/days) : ");
+                deadLine:
                 scanf (" %d/%d/%d",&holder.deadLine[0],&holder.deadLine[1],&holder.deadLine[2]);
+                if (holder.deadLine[0]<0 || holder.deadLine[1]<0||holder.deadLine[1]>12 ||holder.deadLine[2]<0 || holder.deadLine[2]>31) {
+
+                    printf ("Invalid date,try again : ");
+                    goto deadLine;
+                }
                 printf ("\nenter a starting date (Year/months/days) or leave blank to start the task now : ");
-                scanf (" %d/%d/%d",&holder.deadLine[3],&holder.deadLine[4],&holder.deadLine[5]);
+                deadLineStart:
+                scanf (" %d/%d/%d",&holder.deadLineStart[0],&holder.deadLineStart[1],&holder.deadLineStart[2]);
+                if (holder.deadLineStart[0]<0 || holder.deadLineStart[1]<0||holder.deadLineStart[1]>12 ||holder.deadLineStart[2]<0 || holder.deadLineStart[2]>31) {
+
+                    printf ("Invalid date,try again : ");
+                    goto deadLineStart;
+                }
                 printf ("\nAdd a priority (or leave blank for low priority): \n choice 1 : critical priority \n choice 2 : high priority \n choice 3 : natural priority \n choice 4 : low priority\n");
-                scanf (" %d",&holder.Prio);
+
+                printf ("\nMy choice : ");
+
+                priority:
+
+                scanf (" %c",&holder.Prio);
+
+                if (holder.Prio<49||holder.Prio>52) {
+
+                    printf ("\n Invalid choice,try again : ");
+
+                    goto priority;
+                }
+
                 printf ("\nAdd tags : ");
-                scanf (" %s",holder.tages);
-                printf ("\nAdd a the colaborator's email (Leave Blank for no colaborator):");
+                scanf (" %[^\n]s",holder.tages);
+                printf ("\nAdd a the colaborator's email (enter 'N' for no colaboration):");
                 scanf (" %s",holder.colab);
 
                 taskSave ();
 
-                printf ("\nThe task : %s was added succsefully\n choice A:Main menue \n choice B:exit the program \n my choice : ",holder.title);
-                scanf(" %1c",&choice[1]);
+                printf ("\nThe task : %s was added succsefully\n choice A:Main menue \n choice B:exit the program \n choice C:Add New Task \n my choice : ",holder.title);
+                MainORexit:
+                scanf(" %c",&choice[1]);
 
                 if (choice [1]=='A'||choice [1]=='a') goto menu;
                 else if (choice [1]=='B'||choice [1]=='b') return 0;
-                else printf ("invalid choice");
+                else if (choice [1]=='C'||choice [1]=='c') goto newtask;
+                else {
+                        printf ("Invalid Choice!\n try again : ");
+                        goto MainORexit;
+
+                }
 
 
 
@@ -173,17 +210,94 @@ if (logOPtions ==1) {
                 break;
             case '2':
                 system ("cls");
-                printf ("________________________>>Edit Task!<<_____________________________\n");break;
+                printf ("________________________>>Edit Task!<<_____________________________\n");
+                printf ("||\t\t\t\t\t\t\t\t||\n");
+                printf ("||\t\t\t\t\t\t\t\t||\n");
+                printf ("||\t\t");
+                printf ("choice 1: Edit Title");
+                printf ("\t\t\t\t||\n");
+                printf ("||\t\t");
+                printf ("choice 3: Edit Description");
+                printf ("\t\t\t||\n");
+                printf ("||\t\t");
+                printf ("choice 4: edit Tag");
+                printf ("\t\t\t\t||\n");
+                printf ("||\t\t");
+                printf ("choice 5: Edit Dead-Line");
+
+
+                printf ("\t\t\t||\n");
+                printf ("||\t\t\t\t\t\t\t\t||\n");
+                printf ("||\t\t\t\t\t\t\t\t||\n");
+                printf ("||\t\t\t\t\t\t\t\t||\n");
+                printf ("________________________>>Select a Choice!<<________________________\n");
+
+                printf ("My choice : ");
+                scanf(" %c",&choice[2]); // should I make a function ? or do what ? I do not want to nest the switch case
+                break;
+
+
 
             case '3':
                 system ("cls");
-                printf ("________________________>>Delate Task!<<_____________________________\n");break;
+                printf ("________________________>>Delate Task!<<_____________________________\n");
+
+
+                printf ("||\t\t\t\t\t\t\t\t||\n");
+                printf ("||\t\t\t\t\t\t\t\t||\n");
+                printf ("||\t\t");
+                printf ("choice 1: delate by ID");
+                printf ("\t\t\t\t||\n");
+                printf ("||\t\t");
+                printf ("choice 2: delate by tittle");
+                printf ("\t\t\t||\n");
+                printf ("||\t\t\t\t\t\t\t\t||\n");
+                printf ("||\t\t\t\t\t\t\t\t||\n");
+                printf ("||\t\t\t\t\t\t\t\t||\n");
+                printf ("________________________>>Select a Choice!<<________________________\n");
+
+                printf ("My choice : ");
+                scanf(" %c",&choice[3]);
+                break;
             case '4':
                 system ("cls");
-                printf ("________________________>>Show Task!<<_____________________________\n");break;
+                printf ("________________________>>Show Task!<<_____________________________\n");
+
+
+                printf ("My choice : ");
+                scanf(" %c",&choice[4]);
+
+                break;
+                //here I should put the fuction that shows tasks
             case '5':
                 system ("cls");
-                printf ("________________________>>Search Task!<<_____________________________\n");break;
+                printf ("________________________>>Search Task!<<_____________________________\n");
+
+                 printf ("||\t\t\t\t\t\t\t\t||\n");
+                printf ("||\t\t\t\t\t\t\t\t||\n");
+                printf ("||\t\t");
+                printf ("choice 1: search by Title");
+                printf ("\t\t\t||\n");
+                printf ("||\t\t");
+                printf ("choice 2: search by identifier");
+                printf ("\t\t\t||\n");
+                printf ("||\t\t");
+                printf ("choice 3: search by Tag");
+                printf ("\t\t\t\t||\n");
+                printf ("||\t\t\t\t\t\t\t\t||\n");
+                printf ("||\t\t\t\t\t\t\t\t||\n");
+                printf ("||\t\t\t\t\t\t\t\t||\n");
+                printf ("________________________>>Select a Choice!<<________________________\n");
+                printf ("My choice : ");
+                scanf(" %c",&choice[5]);
+
+
+                break;
+
+
+
+
+
             default :
             printf ("\nYour choice is not valid,try again 3s...");
             Sleep (3000);
