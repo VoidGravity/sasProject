@@ -30,7 +30,7 @@ task temp;
 ///////////////////////////////////I HAAAATe.............. gonna take a pause
 
 
-int tasksize=3;
+int tasksize=0;
 char array [500][500];
 
 ///////////////////:hado 5asahom 5Dma dok functions
@@ -42,11 +42,12 @@ int taskSave () {
 
     if (taskfile==NULL) {
 
-            printf ("Error 404 : Failed to creat the task");
-            return 1;
+            printf ("Error 404 : Failed to create the task");
+            return 404;
 
     }
     srand (time(NULL));
+
     holder.id=rand()%999+1000;
         //fprintf (taskfile,"test file");
     fprintf (taskfile,"%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%s\n%s\n%s\n%s\n",holder.id,holder.deadLine[0],holder.deadLine[1],holder.deadLine[2],holder.deadLineStart[0],holder.deadLineStart[1],holder.deadLineStart[2],holder.Prio,holder.title,holder.desc,holder.tages,holder.colab);
@@ -57,44 +58,42 @@ int taskSave () {
 
 }
 
-int compareTasks(const void *a, const void *b) {
-    return -strcmp(((const task *)a)->title, ((const task *)b)->title);
+int taskPlacement(const void *a, const void *b) {
+    return strcmp(((const task *)a)->title, ((const task *)b)->title);
 }
 
 int TaskShow() {
+
     FILE *taskfile = fopen("Thetasks.txt", "r");
+
     if (taskfile == NULL) {
         printf("Error opening file.\n");
         return 1;
     }
 
-    task stuff[10]; // Assuming an array of task structures
 
-    for (int i = 0; i < 3; i++) {
-        fscanf(taskfile, " %d", &stuff[i].id);
-        fscanf(taskfile, " %c", &stuff[i].Prio);
+    while (fscanf(taskfile, " %d", &stuff[tasksize].id) != EOF) {
+        fscanf(taskfile, " %c", &stuff[tasksize].Prio);
         for (int j = 0; j < 3; j++) {
-            fscanf(taskfile, "%d", &stuff[i].deadLine[j]);
+            fscanf(taskfile, "%d", &stuff[tasksize].deadLine[j]);
         }
         for (int j = 0; j < 3; j++) {
-            fscanf(taskfile, "%d", &stuff[i].deadLineStart[j]);
+            fscanf(taskfile, "%d", &stuff[tasksize].deadLineStart[j]);
         }
+        fscanf(taskfile, " %39[^\n]", stuff[tasksize].title);
+        fscanf(taskfile, " %399[^\n]", stuff[tasksize].desc);
+        fscanf(taskfile, " %19s", stuff[tasksize].tages);
+        fscanf(taskfile, " %39[^\n]", stuff[tasksize].colab);
 
-        // Read the 'title' field including spaces (up to 39 characters)
-        fscanf(taskfile, " %39[^\n]", stuff[i].title);
-        // Read the 'desc' field including spaces (up to 399 characters)
-        fscanf(taskfile, " %399[^\n]", stuff[i].desc);
-        fscanf(taskfile, " %19s", stuff[i].tages);
-        fscanf(taskfile, " %39[^\n]", stuff[i].colab);
+        tasksize++;
     }
 
     fclose(taskfile);
 
-    // Sort the tasks based on the 'title' field
-    qsort(stuff, 2, sizeof(2), compareTasks);
+    qsort(stuff, 3, sizeof(task), taskPlacement);
 
-    // Print the sorted tasks
-    for (int k = 0; k < 3; k++) {
+
+    for (int k = 0; k < tasksize; k++) {
         printf("\nTitle: %s\n", stuff[k].title);
         printf("ID: %d\n", stuff[k].id);
         printf("Priority: %c\n", stuff[k].Prio);
@@ -104,9 +103,12 @@ int TaskShow() {
         printf("Tags: %s\n", stuff[k].tages);
         printf("Collaborators: %s\n", stuff[k].colab);
     }
-
-    return 0;
 }
+
+
+
+
+
 
 int characterCounter (char holder[40],char breaker) {
 
