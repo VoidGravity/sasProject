@@ -2,14 +2,18 @@
 #include <windows.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 //use the char counter to count how many characters in the desc , make it usefull
 
-struct task {
+
+typedef struct{
+
 
 int id;
 char Prio;
 int deadLine[3];
 int deadLineStart [3];
+
 
 char tages[20];
 char title[40];
@@ -17,12 +21,21 @@ char desc [400];
 char colab[40];
 
 
-};
-struct task holder;
+}task;
+task holder;
+task stuff[300];
+task temp;
+
+
+///////////////////////////////////I HAAAATe.............. gonna take a pause
+
+
+int tasksize=3;
+char array [500][500];
 
 ///////////////////:hado 5asahom 5Dma dok functions
 
-int TaskShow (){}
+
 int taskSave () {
 
     FILE *taskfile = fopen ("Thetasks.txt","a");
@@ -36,16 +49,64 @@ int taskSave () {
     srand (time(NULL));
     holder.id=rand()%999+1000;
         //fprintf (taskfile,"test file");
-    fprintf (taskfile," %d\n %d\n %d\n %d\n %d\n %d\n %d\n %d\n %s\n %s\n %s\n %s\n ",holder.id,holder.deadLine[0],holder.deadLine[1],holder.deadLine[2],holder.deadLineStart[0],holder.deadLineStart[1],holder.deadLineStart[2],holder.Prio,holder.title,holder.desc,holder.tages,holder.colab);
+    fprintf (taskfile,"%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%s\n%s\n%s\n%s\n",holder.id,holder.deadLine[0],holder.deadLine[1],holder.deadLine[2],holder.deadLineStart[0],holder.deadLineStart[1],holder.deadLineStart[2],holder.Prio,holder.title,holder.desc,holder.tages,holder.colab);
 
 
     fclose (taskfile);
+    tasksize++;
 
 }
 
+int compareTasks(const void *a, const void *b) {
+    return -strcmp(((const task *)a)->title, ((const task *)b)->title);
+}
 
+int TaskShow() {
+    FILE *taskfile = fopen("Thetasks.txt", "r");
+    if (taskfile == NULL) {
+        printf("Error opening file.\n");
+        return 1;
+    }
 
+    task stuff[10]; // Assuming an array of task structures
 
+    for (int i = 0; i < 3; i++) {
+        fscanf(taskfile, " %d", &stuff[i].id);
+        fscanf(taskfile, " %c", &stuff[i].Prio);
+        for (int j = 0; j < 3; j++) {
+            fscanf(taskfile, "%d", &stuff[i].deadLine[j]);
+        }
+        for (int j = 0; j < 3; j++) {
+            fscanf(taskfile, "%d", &stuff[i].deadLineStart[j]);
+        }
+
+        // Read the 'title' field including spaces (up to 39 characters)
+        fscanf(taskfile, " %39[^\n]", stuff[i].title);
+        // Read the 'desc' field including spaces (up to 399 characters)
+        fscanf(taskfile, " %399[^\n]", stuff[i].desc);
+        fscanf(taskfile, " %19s", stuff[i].tages);
+        fscanf(taskfile, " %39[^\n]", stuff[i].colab);
+    }
+
+    fclose(taskfile);
+
+    // Sort the tasks based on the 'title' field
+    qsort(stuff, 2, sizeof(2), compareTasks);
+
+    // Print the sorted tasks
+    for (int k = 0; k < 3; k++) {
+        printf("\nTitle: %s\n", stuff[k].title);
+        printf("ID: %d\n", stuff[k].id);
+        printf("Priority: %c\n", stuff[k].Prio);
+        printf("Deadlines: %d %d %d\n", stuff[k].deadLine[0], stuff[k].deadLine[1], stuff[k].deadLine[2]);
+        printf("DeadlineStarts: %d %d %d\n", stuff[k].deadLineStart[0], stuff[k].deadLineStart[1], stuff[k].deadLineStart[2]);
+        printf("Description: %s\n", stuff[k].desc);
+        printf("Tags: %s\n", stuff[k].tages);
+        printf("Collaborators: %s\n", stuff[k].colab);
+    }
+
+    return 0;
+}
 
 int characterCounter (char holder[40],char breaker) {
 
@@ -55,7 +116,6 @@ int characterCounter (char holder[40],char breaker) {
         }
  }
 }
-//i DO NOT NEED MULTIPLE STRUTRES FOR MULTIPLE TASKS ! BUT WHAT ABOUT USERS ? like 3d stuff ?
 
 
 
@@ -262,41 +322,43 @@ if (logOPtions ==1) {
             case '4':
                 system ("cls");
                 printf ("________________________>>Show Task!<<_____________________________\n");
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    printf ("Choice 1 : sort alphabetically\n Choice 2 : sort by deadline \n Choice 3 : sort by priority \n Choice 4 : sort by creation date \n Choice 5 : Show tasks whose deadline is in 3 days or less. \n My choice : ");
-                    sortOp:
-                    scanf(" %c",&choice[3]);
-                    switch (choice[6]) {
-                        case '1':
-                        case '2':
-                        case '3':
-                        case '4':
-                        case '5':
-                        default :
-                            printf ("Invalid Choice , Please try again : ");
-                            goto sortOp;
-
-                            break;
-
-
-
-
-
-                    }
-
+                TaskShow ();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
+//                    printf ("Choice 1 : sort alphabetically\n Choice 2 : sort by deadline \n Choice 3 : sort by priority \n Choice 4 : sort by creation date \n Choice 5 : Show tasks whose deadline is in 3 days or less. \n My choice : ");
+//                    sortOp:
+//                    scanf(" %c",&choice[6]);
+//                    switch (choice[6]) {
+//                        case '1':
+//                        case '2':
+//                        case '3':
+//                        case '4':
+//                        case '5':
+//                        default :
+//                            printf ("Invalid Choice , Please try again : ");
+//                            goto sortOp;
+//
+//                            break;
+//
+//
+//
+//
+//
+//                    }
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                printf ("My choice : ");
-                scanf(" %c",&choice[4]);
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                printf ("My choice : ");
+//                scanf(" %c",&choice[4]);
 
                 break;
                 //here I should put the fuction that shows tasks
