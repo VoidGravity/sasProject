@@ -26,12 +26,12 @@ task holder;
 task stuff[300];
 task temp;
 
+char choice[10];
 
 ///////////////////////////////////I HAAAATe.............. gonna take a pause
 
 
 int tasksize=0;
-char array [500][500];
 
 ///////////////////:hado 5asahom 5Dma dok functions
 
@@ -62,7 +62,7 @@ int taskPlacement(const void *a, const void *b) {
     return strcmp(((const task *)a)->title, ((const task *)b)->title);
 }
 
-int TaskShow() {
+int TaskShow(char yourchoice) {
 
     FILE *taskfile = fopen("Thetasks.txt", "r");
 
@@ -90,9 +90,31 @@ int TaskShow() {
 
     fclose(taskfile);
 
-    qsort(stuff, 3, sizeof(task), taskPlacement);
+    // this is where I sort the taskss
+
+         if (choice[6]== '1') {
+
+            for (int i = 0;i <tasksize;i++) {
+                    for (int k=0; k<tasksize-i-1;k++) {
+                        if (strcmp(stuff[k].title,stuff[k+1].title)>0) {
+
+                            temp= stuff[k];
+                            stuff[k] = stuff[k+1];
+                            stuff[k+1]= temp;
+                        }
+                    }
+                }
+
+         }
+         else if (choice[6]== '4') {
 
 
+            goto prnt;
+
+         }
+
+
+        prnt :
     for (int k = 0; k < tasksize; k++) {
         printf("\nTitle: %s\n", stuff[k].title);
         printf("ID: %d\n", stuff[k].id);
@@ -124,7 +146,6 @@ int characterCounter (char holder[40],char breaker) {
 
 
 
-
 int main () {
 
 int logOPtions,verification,validEmailSize;
@@ -132,7 +153,7 @@ int validEmail=0;
 int validEmailDOtcom=0;
 int validEmailPreA =0;
 int existAcc = 1;
-char email[40],password[40],logMail[40],logPass[40],choice[10];
+char email[40],password[40],logMail[40],logPass[40];
 
 
 
@@ -263,7 +284,7 @@ if (logOPtions ==1) {
 
 
                 //ana hna , the idea is to create a 2d array and once you successfully scanned the tiitle , incriment the value of the collumn
-                //switched that Idea Up with a simple strcuture , turns out structures are pretty cool ,but don't worry arrays , daddy still love you
+                //switched that Idea Up with a simple strcuture , turns out structures are pretty cool ,but don't worry arrayarrays , daddy still love you
 
 
 
@@ -324,24 +345,25 @@ if (logOPtions ==1) {
             case '4':
                 system ("cls");
                 printf ("________________________>>Show Task!<<_____________________________\n");
-                TaskShow ();
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                    printf ("Choice 1 : sort alphabetically\n Choice 2 : sort by deadline \n Choice 3 : sort by priority \n Choice 4 : sort by creation date \n Choice 5 : Show tasks whose deadline is in 3 days or less. \n My choice : ");
-//                    sortOp:
-//                    scanf(" %c",&choice[6]);
-//                    switch (choice[6]) {
-//                        case '1':
-//                        case '2':
-//                        case '3':
-//                        case '4':
-//                        case '5':
-//                        default :
-//                            printf ("Invalid Choice , Please try again : ");
-//                            goto sortOp;
-//
-//                            break;
-//
+
+                    printf ("Choice 1 : sort alphabetically\n Choice 2 : sort by deadline \n Choice 3 : sort by priority \n Choice 4 : sort by creation date \n Choice 5 : Show tasks whose deadline is in 3 days or less. \n My choice : ");
+                    sortOp:
+                    scanf(" %c",&choice[6]);
+                    switch (choice[6]) {
+                        case '1': TaskShow (choice[6]); break;
+                        case '2': TaskShow (choice[6]); break;
+                        case '3': TaskShow (choice[6]); break;
+                        case '4': TaskShow (choice[6]); break;
+                        case '5': TaskShow (choice[6]); break;
+
+                        default :
+                            printf ("Invalid Choice , Please try again : ");
+                            goto sortOp;
+
+                        break;
+                    }
+
 //
 //
 //
