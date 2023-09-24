@@ -105,13 +105,37 @@ int TaskShow(char yourchoice) {
                     }
                 }
 
-         }
+            }
+
          else if (choice[6]== '4') {
 
 
             goto prnt;
 
          }
+         else if (choice[6]=='3') {
+
+            for (int i = 0;i <tasksize;i++) {
+                    for (int k=0; k<tasksize-i-1;k++) {
+
+                        if (stuff[k].Prio>stuff[k+1].Prio) {
+
+                            temp= stuff[k];
+                            stuff[k] = stuff[k+1];
+                            stuff[k+1]= temp;
+                        }
+                    }
+                }
+         }
+//         // still choice 2 deadline anc choice 5 3 days
+//         else if (choice[6]=='2') {
+//
+//
+//
+//
+//
+//
+//         }
 
 
         prnt :
@@ -406,7 +430,19 @@ if (logOPtions ==1) {
                 printf ("||\t\t\t\t\t\t\t\t||\n");
                 printf ("________________________>>Select a Choice!<<________________________\n");
                 printf ("My choice : ");
+                srch :
                 scanf(" %c",&choice[5]);
+                switch (choice[7]){
+                    case '1': TaskShow (choice[7]); break;
+                    case '2': TaskShow (choice[7]); break;
+                    case '3': TaskShow (choice[7]); break;
+                    default :
+                        printf ("invalid choice , Please try again : ");
+                        goto srch;
+                        break;
+
+
+                }
 
 
                 break;
