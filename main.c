@@ -350,6 +350,76 @@ int taskFound = 0;
     }
     return taskFound;
 }
+
+int delateTask (int skipValue) {
+
+FILE *taskfile = fopen ("Thetasks.txt","r");
+//this has no issues brojola
+    while (fscanf(taskfile, " %d", &stuff[tasksize].id) != EOF) {
+        fscanf(taskfile, " %c", &stuff[tasksize].Prio);
+        for (int j = 0; j < 3; j++) {
+            fscanf(taskfile, "%d", &stuff[tasksize].deadLine[j]);
+        }
+        for (int j = 0; j < 3; j++) {
+            fscanf(taskfile, "%d", &stuff[tasksize].deadLineStart[j]);
+        }
+        fscanf(taskfile, " %39[^\n]", stuff[tasksize].title);
+        fscanf(taskfile, " %399[^\n]", stuff[tasksize].desc);
+        fscanf(taskfile, " %19s", stuff[tasksize].tages);
+        fscanf(taskfile, " %39[^\n]", stuff[tasksize].colab);
+
+        tasksize++;
+
+
+    }
+    fclose (taskfile);
+////////////////
+   taskfile = fopen ("Thetaskstemp.txt","a");
+
+
+        if (taskfile==NULL) {
+
+                printf ("Error 404 : Failed to create the task");
+                return 405;
+
+        }
+        int skipk=-5;
+        for (int k = 0; k<tasksize;k++) {
+            // if value = id , the inc wil be stored and then skiped
+            if (skipValue==stuff[k].id) {
+
+               skipk =k;
+            }
+            if (k==skipk) {
+                continue;
+            }
+            fprintf(taskfile, "%d\n", stuff[k].id);
+            fprintf(taskfile, "%c\n", stuff[k].Prio);
+            fprintf(taskfile, "%d\n%d\n%d\n", stuff[k].deadLine[0], stuff[k].deadLine[1], stuff[k].deadLine[2]);
+            fprintf(taskfile, "%d\n%d\n%d\n", stuff[k].deadLineStart[0], stuff[k].deadLineStart[1], stuff[k].deadLineStart[2]);
+            fprintf(taskfile, "%s\n", stuff[k].title);
+            fprintf(taskfile, "%s\n", stuff[k].desc);
+            fprintf(taskfile, "%s\n", stuff[k].tages);
+            fprintf(taskfile, "%s\n", stuff[k].colab);
+
+
+        }
+
+
+        fclose (taskfile);
+
+        remove ("Thetasks.txt");
+
+
+        rename("Thetaskstemp.txt","Thetasks.txt");
+
+        printf ("the task with the ID : %d was delated succesfully \n",skipValue);
+
+
+
+
+}
+
 int main () {
 
 int logOPtions,verification,validEmailSize;
@@ -538,19 +608,13 @@ if (logOPtions ==1) {
 
                 printf ("||\t\t\t\t\t\t\t\t||\n");
                 printf ("||\t\t\t\t\t\t\t\t||\n");
-                printf ("||\t\t");
-                printf ("choice 1: delate by ID");
-                printf ("\t\t\t\t||\n");
-                printf ("||\t\t");
-                printf ("choice 2: delate by tittle");
-                printf ("\t\t\t||\n");
                 printf ("||\t\t\t\t\t\t\t\t||\n");
-                printf ("||\t\t\t\t\t\t\t\t||\n");
-                printf ("||\t\t\t\t\t\t\t\t||\n");
-                printf ("________________________>>Select a Choice!<<________________________\n");
+                printf ("________________________>>Type the ID!<<________________________\n");
+                printf ("the id is : ");
+                int idvalue;
+                scanf(" %d",&idvalue);
+                delateTask (idvalue);
 
-                printf ("My choice : ");
-                scanf(" %c",&choice[3]);
                 break;
             case '4':
                 system ("cls");
