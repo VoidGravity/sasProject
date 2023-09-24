@@ -420,6 +420,84 @@ FILE *taskfile = fopen ("Thetasks.txt","r");
 
 }
 
+int editTask (int skipValue,char description [400],char title [40],char tag [10]) {
+
+
+FILE *taskfile = fopen ("Thetasks.txt","r");
+//this has no issues brojola
+    while (fscanf(taskfile, " %d", &stuff[tasksize].id) != EOF) {
+        fscanf(taskfile, " %c", &stuff[tasksize].Prio);
+        for (int j = 0; j < 3; j++) {
+            fscanf(taskfile, "%d", &stuff[tasksize].deadLine[j]);
+        }
+        for (int j = 0; j < 3; j++) {
+            fscanf(taskfile, "%d", &stuff[tasksize].deadLineStart[j]);
+        }
+        fscanf(taskfile, " %39[^\n]", stuff[tasksize].title);
+        fscanf(taskfile, " %399[^\n]", stuff[tasksize].desc);
+        fscanf(taskfile, " %19s", stuff[tasksize].tages);
+        fscanf(taskfile, " %39[^\n]", stuff[tasksize].colab);
+
+        tasksize++;
+
+
+    }
+    fclose (taskfile);
+////////////////
+   taskfile = fopen ("Thetaskstemp.txt","a");
+
+
+        if (taskfile==NULL) {
+
+                printf ("Error 404 : Failed to create the task");
+                return 405;
+
+        }
+        int skipk=-5;
+        for (int k = 0; k<tasksize;k++) {
+            // if value = id , the inc wil be stored and then skiped
+            if (skipValue==stuff[k].id) {
+
+               skipk =k;
+
+               fprintf(taskfile, "%d\n", stuff[k].id);
+            fprintf(taskfile, "%c\n", stuff[k].Prio);
+            fprintf(taskfile, "%d\n%d\n%d\n",stuff[k].deadLine[0], stuff[k].deadLine[1], stuff[k].deadLine[2]);
+            fprintf(taskfile, "%d\n%d\n%d\n",stuff[k].deadLineStart[0], stuff[k].deadLineStart[1], stuff[k].deadLineStart[2]);
+            fprintf(taskfile, "%s\n",title);
+            fprintf(taskfile, "%s\n", description); //new string inp
+            fprintf(taskfile, "%s\n",tag);
+            fprintf(taskfile, "%s\n", stuff[k].colab);
+
+            }
+            if (k==skipk) {
+                continue;
+            }
+            fprintf(taskfile, "%d\n", stuff[k].id);
+            fprintf(taskfile, "%c\n", stuff[k].Prio);
+            fprintf(taskfile, "%d\n%d\n%d\n",stuff[k].deadLine[0], stuff[k].deadLine[1], stuff[k].deadLine[2]);
+            fprintf(taskfile, "%d\n%d\n%d\n",stuff[k].deadLineStart[0], stuff[k].deadLineStart[1], stuff[k].deadLineStart[2]);
+            fprintf(taskfile, "%s\n", stuff[k].title);
+            fprintf(taskfile, "%s\n", stuff[k].desc);
+            fprintf(taskfile, "%s\n", stuff[k].tages);
+            fprintf(taskfile, "%s\n", stuff[k].colab);
+
+
+        }
+
+
+        fclose (taskfile);
+
+        remove ("Thetasks.txt");
+
+
+        rename("Thetaskstemp.txt","Thetasks.txt");
+
+        printf ("the task was succesfully edited\n");
+
+
+}
+
 int main () {
 
 int logOPtions,verification,validEmailSize;
@@ -576,27 +654,42 @@ if (logOPtions ==1) {
                 printf ("________________________>>Edit Task!<<_____________________________\n");
                 printf ("||\t\t\t\t\t\t\t\t||\n");
                 printf ("||\t\t\t\t\t\t\t\t||\n");
+
+
+
+
                 printf ("||\t\t");
-                printf ("choice 1: Edit Title");
+                printf ("enter the task ID");
                 printf ("\t\t\t\t||\n");
+                printf ("\nID : ");
+                int newid;
+                scanf (" %d",&newid);
+                ///
                 printf ("||\t\t");
-                printf ("choice 3: Edit Description");
-                printf ("\t\t\t||\n");
-                printf ("||\t\t");
-                printf ("choice 4: edit Tag");
+                printf ("EDIT THE TITLE");
                 printf ("\t\t\t\t||\n");
+                printf ("\nmy new title : ");
+                char newtitle [40];
+                scanf (" %[^\n]s",newtitle);
+
                 printf ("||\t\t");
-                printf ("choice 5: Edit Dead-Line");
+                printf ("EDIT THE description");
+                printf ("\t\t\t\t||\n");
+                printf ("\nmy new description : ");
+                char newdesc [400];
+                scanf (" %[^\n]s",newdesc);
+
+                printf ("||\t\t");
+                printf ("EDIT THE tags");
+                printf ("\t\t\t\t||\n");
+                printf ("\nmy new tag : ");
+                char newtags[10];
+                scanf (" %[^\n]s",newtags);
 
 
-                printf ("\t\t\t||\n");
-                printf ("||\t\t\t\t\t\t\t\t||\n");
-                printf ("||\t\t\t\t\t\t\t\t||\n");
-                printf ("||\t\t\t\t\t\t\t\t||\n");
-                printf ("________________________>>Select a Choice!<<________________________\n");
 
-                printf ("My choice : ");
-                scanf(" %c",&choice[2]); // should I make a function ? or do what ? I do not want to nest the switch case
+                editTask (newid,newdesc,newtitle,newtags);
+                scanf(" %c",&choice[2]);
                 break;
 
 
