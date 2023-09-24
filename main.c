@@ -22,6 +22,7 @@ char colab[40];
 
 
 }task;
+
 task holder;
 task stuff[300];
 task temp;
@@ -208,7 +209,6 @@ int TaskShow(char yourchoice) {
            if (choice[6]== '6') {
 
                   for (int k=0; k<tasksize;k++) {
-                        printf ("lopp enetered");
                      if (timediff(k)<=3 && timediff(k)>0 ) {
 
                             printf("\nTitle: %s\n", stuff[k].title);
@@ -352,7 +352,7 @@ int taskFound = 0;
 }
 
 int delateTask (int skipValue) {
-
+int delated=0;
 FILE *taskfile = fopen ("Thetasks.txt","r");
 //this has no issues brojola
     while (fscanf(taskfile, " %d", &stuff[tasksize].id) != EOF) {
@@ -389,6 +389,7 @@ FILE *taskfile = fopen ("Thetasks.txt","r");
             if (skipValue==stuff[k].id) {
 
                skipk =k;
+               delated++;
             }
             if (k==skipk) {
                 continue;
@@ -413,7 +414,8 @@ FILE *taskfile = fopen ("Thetasks.txt","r");
 
         rename("Thetaskstemp.txt","Thetasks.txt");
 
-        printf ("the task with the ID : %d was delated succesfully \n",skipValue);
+        if (delated!=0) printf ("\nthe task with the ID : %d was delated succesfully \n",skipValue);
+        else printf ("\ntask not found");
 
 
 
@@ -421,7 +423,7 @@ FILE *taskfile = fopen ("Thetasks.txt","r");
 }
 
 int editTask (int skipValue,char description [400],char title [40],char tag [10]) {
-
+int modified =0;
 
 FILE *taskfile = fopen ("Thetasks.txt","r");
 //this has no issues brojola
@@ -468,6 +470,7 @@ FILE *taskfile = fopen ("Thetasks.txt","r");
             fprintf(taskfile, "%s\n", description); //new string inp
             fprintf(taskfile, "%s\n",tag);
             fprintf(taskfile, "%s\n", stuff[k].colab);
+            modified++;
 
             }
             if (k==skipk) {
@@ -492,8 +495,8 @@ FILE *taskfile = fopen ("Thetasks.txt","r");
 
 
         rename("Thetaskstemp.txt","Thetasks.txt");
+        if (modified!=0) printf ("the task was succesfully edited\n");
 
-        printf ("the task was succesfully edited\n");
 
 
 }
@@ -585,7 +588,7 @@ if (logOPtions ==1) {
                 printf ("\nenter a starting date (Year/months/days) or leave blank to start the task now : ");
                 deadLineStart:
                 scanf (" %d/%d/%d",&holder.deadLineStart[0],&holder.deadLineStart[1],&holder.deadLineStart[2]);
-                if (holder.deadLineStart[0]<0 || holder.deadLineStart[1]<0||holder.deadLineStart[1]>12 ||holder.deadLineStart[2]<0 || holder.deadLineStart[2]>31) {
+                if (holder.deadLineStart[0]<1900||holder.deadLineStart[0]<0 || holder.deadLineStart[1]<0||holder.deadLineStart[1]>12 ||holder.deadLineStart[2]<0 || holder.deadLineStart[2]>31) {
 
                     printf ("Invalid date,try again : ");
                     goto deadLineStart;
@@ -650,6 +653,7 @@ if (logOPtions ==1) {
 
                 break;
             case '2':
+                editt :
                 system ("cls");
                 printf ("________________________>>Edit Task!<<_____________________________\n");
                 printf ("||\t\t\t\t\t\t\t\t||\n");
@@ -688,13 +692,25 @@ if (logOPtions ==1) {
 
 
 
-                editTask (newid,newdesc,newtitle,newtags);
-                scanf(" %c",&choice[2]);
+                if (editTask (newid,newdesc,newtitle,newtags)==0)printf ("task not found");
+
+                printf("\nDo you want to A-return to main menue or B-exit the program C-edit new task\n my choice : ");
+                            MainORexitedit :
+                            scanf(" %c",&choice[1]);
+
+                            if (choice [1]=='A'||choice [1]=='a') goto menu;
+                            else if (choice [1]=='B'||choice [1]=='b') return 0;
+                            else if (choice [1]=='C'||choice [1]=='c') goto editt;
+                            else {
+                                    printf ("Invalid Choice!\n try again : ");
+                                    goto MainORexitedit;
+                            }
                 break;
 
 
 
             case '3':
+                dlt :
                 system ("cls");
                 printf ("________________________>>Delate Task!<<_____________________________\n");
 
@@ -708,8 +724,20 @@ if (logOPtions ==1) {
                 scanf(" %d",&idvalue);
                 delateTask (idvalue);
 
+                            printf("\nDo you want to A-return to main menue or B-exit the program C-delate another tasks \n my choice : ");
+                            MainORexitdelate :
+                            scanf(" %c",&choice[1]);
+
+                            if (choice [1]=='A'||choice [1]=='a') goto menu;
+                            else if (choice [1]=='B'||choice [1]=='b') return 0;
+                            else if (choice [1]=='C'||choice [1]=='c') goto dlt;
+                            else {
+                                    printf ("Invalid Choice!\n try again : ");
+                                    goto MainORexitdelate;
+                            }
                 break;
             case '4':
+                sort :
                 system ("cls");
                 printf ("________________________>>Show Task!<<_____________________________\n");
 
@@ -719,12 +747,104 @@ if (logOPtions ==1) {
                     sortOp:
                     scanf(" %c",&choice[6]);
                     switch (choice[6]) {
-                        case '1': TaskShow (choice[6]); break;
-                        case '2': TaskShow (choice[6]); break;
-                        case '3': TaskShow (choice[6]); break;
-                        case '4': TaskShow (choice[6]); break;
-                        case '5': TaskShow (choice[6]); break;
-                        case '6': TaskShow (choice[6]); break;
+                        case '1':
+                            TaskShow (choice[6]);
+                            printf("Do you want to A-return to main menue or B-exit the program C-sort tasks difrently \n my choice : ");
+                            MainORexitshowa :
+                            scanf(" %c",&choice[1]);
+
+                            if (choice [1]=='A'||choice [1]=='a') goto menu;
+                            else if (choice [1]=='B'||choice [1]=='b') return 0;
+                            else if (choice [1]=='C'||choice [1]=='c') goto sort;
+                            else {
+                                    printf ("Invalid Choice!\n try again : ");
+                                    goto MainORexitshowa;
+                            }
+                            break;
+
+
+                        case '2':
+                            TaskShow (choice[6]);
+
+                            printf("Do you want to A-return to main menue or B-exit the program C-sort tasks difrently \n my choice : ");
+                            MainORexitshowd :
+                            scanf(" %c",&choice[1]);
+
+                            if (choice [1]=='A'||choice [1]=='a') goto menu;
+                            else if (choice [1]=='B'||choice [1]=='b') return 0;
+                            else if (choice [1]=='C'||choice [1]=='c') goto sort;
+                            else {
+                                    printf ("Invalid Choice!\n try again : ");
+                                    goto MainORexitshowd;
+                            }
+
+
+                            break;
+                        case '3':
+                            TaskShow (choice[6]);
+
+                            printf("Do you want to A-return to main menue or B-exit the program C-sort tasks difrently \n my choice : ");
+                            MainORexitshowc :
+                            scanf(" %c",&choice[1]);
+
+                            if (choice [1]=='A'||choice [1]=='a') goto menu;
+                            else if (choice [1]=='B'||choice [1]=='b') return 0;
+                            else if (choice [1]=='C'||choice [1]=='c') goto sort;
+                            else {
+                                    printf ("Invalid Choice!\n try again : ");
+                                    goto MainORexitshowc;
+                            }
+
+                            break;
+                        case '4':
+                            TaskShow (choice[6]);
+
+                            printf("Do you want to A-return to main menue or B-exit the program C-sort tasks difrently \n my choice : ");
+                            MainORexitshowr :
+                            scanf(" %c",&choice[1]);
+
+                            if (choice [1]=='A'||choice [1]=='a') goto menu;
+                            else if (choice [1]=='B'||choice [1]=='b') return 0;
+                            else if (choice [1]=='C'||choice [1]=='c') goto sort;
+                            else {
+                                    printf ("Invalid Choice!\n try again : ");
+                                    goto MainORexitshowr;
+                            }
+
+                            break;
+                        case '5':
+                            TaskShow (choice[6]);
+
+                            printf("Do you want to A-return to main menue or B-exit the program C-sort tasks difrently \n my choice : ");
+                            MainORexitshowq :
+                            scanf(" %c",&choice[1]);
+
+                            if (choice [1]=='A'||choice [1]=='a') goto menu;
+                            else if (choice [1]=='B'||choice [1]=='b') return 0;
+                            else if (choice [1]=='C'||choice [1]=='c') goto sort;
+                            else {
+                                    printf ("Invalid Choice!\n try again : ");
+                                    goto MainORexitshowq;
+                            }
+
+                            break;
+                        case '6':
+                            TaskShow (choice[6]);
+
+                            printf("Do you want to A-return to main menue or B-exit the program C-sort tasks difrently \n my choice : ");
+                            MainORexitshown :
+                            scanf(" %c",&choice[1]);
+
+                            if (choice [1]=='A'||choice [1]=='a') goto menu;
+                            else if (choice [1]=='B'||choice [1]=='b') return 0;
+                            else if (choice [1]=='C'||choice [1]=='c') goto sort;
+                            else {
+                                    printf ("Invalid Choice!\n try again : ");
+                                    goto MainORexitshown;
+                            }
+
+
+                            break;
 
                         default :
                             printf ("Invalid Choice , Please try again : ");
@@ -732,30 +852,10 @@ if (logOPtions ==1) {
 
                         break;
                     }
-
-//
-//
-//
-//
-//                    }
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                printf ("My choice : ");
-//                scanf(" %c",&choice[4]);
-
                 break;
                 //here I should put the fuction that shows tasks
             case '5':
+                srcht :
                 system ("cls");
                 printf ("________________________>>Search Task!<<_____________________________\n");
 
@@ -780,12 +880,26 @@ if (logOPtions ==1) {
                     case '1':
                         printf("\nenter The title : ");
                         scanf (" %s",holder.title);
+
                         if (searchByTitle(holder.title)==0) {
 
                             printf ("The task can't be found\n");
                             Sleep (2000);
                             goto menu;
                         }
+
+                            printf("\nDo you want to A-return to main menue or B-exit the program C-search another task \n my choice : ");
+                            MainORexitsearche :
+                            scanf(" %c",&choice[1]);
+
+                            if (choice [1]=='A'||choice [1]=='a') goto menu;
+                            else if (choice [1]=='B'||choice [1]=='b') return 0;
+                            else if (choice [1]=='C'||choice [1]=='c') goto srcht;
+                            else {
+                                    printf ("Invalid Choice!\n try again : ");
+                                    goto MainORexitsearche;
+                            }
+
 
                         break;
                     case '2':
@@ -798,6 +912,17 @@ if (logOPtions ==1) {
                             Sleep (2000);
                             goto menu;
                         }
+                            printf("\nDo you want to A-return to main menue or B-exit the program C-search another task \n my choice : ");
+                            MainORexitsearcheid :
+                            scanf(" %c",&choice[1]);
+
+                            if (choice [1]=='A'||choice [1]=='a') goto menu;
+                            else if (choice [1]=='B'||choice [1]=='b') return 0;
+                            else if (choice [1]=='C'||choice [1]=='c') goto srcht;
+                            else {
+                                    printf ("Invalid Choice!\n try again : ");
+                                    goto MainORexitsearcheid;
+                            }
 
                         break;
                     default :
