@@ -214,15 +214,15 @@ int TaskShow(char yourchoice) {
                             printf("\nTitle: %s\n", stuff[k].title);
                             printf("ID: %d\n", stuff[k].id);
                             printf("Priority: %c\n", stuff[k].Prio);
-                            printf("Deadlines: %d %d %d\n", stuff[k].deadLine[0], stuff[k].deadLine[1], stuff[k].deadLine[2]);
-                            printf("DeadlineStarts: %d %d %d\n", stuff[k].deadLineStart[0], stuff[k].deadLineStart[1], stuff[k].deadLineStart[2]);
+                            printf("Deadlines: %d\\%d\\%d\n", stuff[k].deadLine[0], stuff[k].deadLine[1], stuff[k].deadLine[2]);
+                            printf("DeadlineStarts: %d\\%d\\%d\n", stuff[k].deadLineStart[0], stuff[k].deadLineStart[1], stuff[k].deadLineStart[2]);
                             printf("Description: %s\n", stuff[k].desc);
                             printf("Tags: %s\n", stuff[k].tages);
                             printf("Collaborators: %s\n", stuff[k].colab);
 
                             }
                         }
-                 return 0;
+                 return 0; //later make the function a void if i do not need return ,,, replace by goto
           }
 
 
@@ -256,10 +256,6 @@ int TaskShow(char yourchoice) {
 }
 
 
-
-
-
-
 int characterCounter (char holder[40],char breaker) {
 
  for (int i =0;i<40;i++) {
@@ -269,11 +265,91 @@ int characterCounter (char holder[40],char breaker) {
  }
 }
 
+int searchByTitle (char titleStr[40]) {
+    FILE *taskfile = fopen ("Thetasks.txt","r");
+
+    while (fscanf(taskfile, " %d", &stuff[tasksize].id) != EOF) {
+        fscanf(taskfile, " %c", &stuff[tasksize].Prio);
+        for (int j = 0; j < 3; j++) {
+            fscanf(taskfile, "%d", &stuff[tasksize].deadLine[j]);
+        }
+        for (int j = 0; j < 3; j++) {
+            fscanf(taskfile, "%d", &stuff[tasksize].deadLineStart[j]);
+        }
+        fscanf(taskfile, " %39[^\n]", stuff[tasksize].title);
+        fscanf(taskfile, " %399[^\n]", stuff[tasksize].desc);
+        fscanf(taskfile, " %19s", stuff[tasksize].tages);
+        fscanf(taskfile, " %39[^\n]", stuff[tasksize].colab);
+
+        tasksize++;
 
 
+    }
+    fclose (taskfile);
+
+int taskFound = 0;
+    for (int k = 0;k<tasksize;k++) {
+        if (strcmp(titleStr,stuff[k].title)==0) {
+                printf("\nTitle: %s\n", stuff[k].title);
+                printf("ID: %d\n", stuff[k].id);
+                printf("Priority: %c\n", stuff[k].Prio);
+                printf("Deadlines: %d\\%d\\%d\n", stuff[k].deadLine[0], stuff[k].deadLine[1], stuff[k].deadLine[2]);
+                printf("DeadlineStarts: %d\\%d\\%d\n", stuff[k].deadLineStart[0], stuff[k].deadLineStart[1], stuff[k].deadLineStart[2]);
+                printf("Description: %s\n", stuff[k].desc);
+                printf("Tags: %s\n", stuff[k].tages);
+                printf("Collaborators: %s\n", stuff[k].colab);
+                taskFound++;
+                tasksize=k;
+        }
+
+    }
+    return taskFound;
+}
 
 
+int searchById (int value) {
 
+FILE *taskfile = fopen ("Thetasks.txt","r");
+
+    while (fscanf(taskfile, " %d", &stuff[tasksize].id) != EOF) {
+        fscanf(taskfile, " %c", &stuff[tasksize].Prio);
+        for (int j = 0; j < 3; j++) {
+            fscanf(taskfile, "%d", &stuff[tasksize].deadLine[j]);
+        }
+        for (int j = 0; j < 3; j++) {
+            fscanf(taskfile, "%d", &stuff[tasksize].deadLineStart[j]);
+        }
+        fscanf(taskfile, " %39[^\n]", stuff[tasksize].title);
+        fscanf(taskfile, " %399[^\n]", stuff[tasksize].desc);
+        fscanf(taskfile, " %19s", stuff[tasksize].tages);
+        fscanf(taskfile, " %39[^\n]", stuff[tasksize].colab);
+
+        tasksize++;
+
+
+    }
+    fclose (taskfile);
+
+int taskFound = 0;
+
+
+    for (int k = 0;k<tasksize;k++) {
+        if (value==stuff[k].id) {
+                printf("\nTitle: %s\n", stuff[k].title);
+                printf("ID: %d\n", stuff[k].id);
+                printf("Priority: %c\n", stuff[k].Prio);
+                printf("Deadlines: %d %d %d\n", stuff[k].deadLine[0], stuff[k].deadLine[1], stuff[k].deadLine[2]);
+                printf("DeadlineStarts: %d %d %d\n", stuff[k].deadLineStart[0], stuff[k].deadLineStart[1], stuff[k].deadLineStart[2]);
+                printf("Description: %s\n", stuff[k].desc);
+                printf("Tags: %s\n", stuff[k].tages);
+                printf("Collaborators: %s\n", stuff[k].colab);
+                taskFound++;
+                tasksize=k;
+        }
+
+    }
+    return taskFound;
+}
 int main () {
 
 int logOPtions,verification,validEmailSize;
@@ -534,9 +610,8 @@ if (logOPtions ==1) {
                 printf ("||\t\t");
                 printf ("choice 2: search by identifier");
                 printf ("\t\t\t||\n");
-                printf ("||\t\t");
-                printf ("choice 3: search by Tag");
-                printf ("\t\t\t\t||\n");
+
+
                 printf ("||\t\t\t\t\t\t\t\t||\n");
                 printf ("||\t\t\t\t\t\t\t\t||\n");
                 printf ("||\t\t\t\t\t\t\t\t||\n");
@@ -544,10 +619,30 @@ if (logOPtions ==1) {
                 printf ("My choice : ");
                 srch :
                 scanf(" %c",&choice[5]);
-                switch (choice[7]){
-                    case '1': TaskShow (choice[7]); break;
-                    case '2': TaskShow (choice[7]); break;
-                    case '3': TaskShow (choice[7]); break;
+                switch (choice[5]){
+                    case '1':
+                        printf("\nenter The title : ");
+                        scanf (" %s",holder.title);
+                        if (searchByTitle(holder.title)==0) {
+
+                            printf ("The task can't be found\n");
+                            Sleep (2000);
+                            goto menu;
+                        }
+
+                        break;
+                    case '2':
+                        printf("\nenter the ID : ");
+
+                        scanf (" %d",&holder.id);
+                        if (searchById(holder.id)==0) {
+
+                            printf ("The task can't be found\n");
+                            Sleep (2000);
+                            goto menu;
+                        }
+
+                        break;
                     default :
                         printf ("invalid choice , Please try again : ");
                         goto srch;
