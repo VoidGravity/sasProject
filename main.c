@@ -507,7 +507,7 @@ int logOPtions,verification,validEmailSize;
 int validEmail=0;
 int validEmailDOtcom=0;
 int validEmailPreA =0;
-int existAcc = 1;
+int existAcc = 0;
 char email[40],password[40],logMail[40],logPass[40];
 
 
@@ -520,6 +520,16 @@ if (logOPtions ==1) {
     scanf ("%s",logMail);
     printf ("\nPLease enter your password : ");
     scanf("%s",logPass);
+    FILE *accountScan = fopen("acount.txt","r");
+    fscanf (accountScan,"%s",email);
+    fscanf (accountScan,"%s",password);
+    fclose (accountScan);
+
+    if (strcmp(logMail,email)==0&&strcmp(logPass,password)==0)
+    {
+        existAcc = 1;
+    }
+
     //check if password matches the password either lid5l 9Bl or limsjl fdata, leave it for later
     /*
     for (int i = 0; i<40;i++) {
@@ -585,7 +595,7 @@ if (logOPtions ==1) {
                     printf ("Invalid date,try again : ");
                     goto deadLine;
                 }
-                printf ("\nenter a starting date (Year/months/days) or leave blank to start the task now : ");
+                printf ("\nenter a starting date (Year/months/days) : ");
                 deadLineStart:
                 scanf (" %d/%d/%d",&holder.deadLineStart[0],&holder.deadLineStart[1],&holder.deadLineStart[2]);
                 if (holder.deadLineStart[0]<1900||holder.deadLineStart[0]<0 || holder.deadLineStart[1]<0||holder.deadLineStart[1]>12 ||holder.deadLineStart[2]<0 || holder.deadLineStart[2]>31) {
@@ -599,7 +609,7 @@ if (logOPtions ==1) {
                          goto deadLineStart;
                     }
 
-                printf ("\nAdd a priority (or leave blank for low priority): \n choice 1 : critical priority \n choice 2 : high priority \n choice 3 : natural priority \n choice 4 : low priority\n");
+                printf ("\nAdd a priority : \n choice 1 : critical priority \n choice 2 : high priority \n choice 3 : natural priority \n choice 4 : low priority\n");
 
                 printf ("\nMy choice : ");
 
@@ -953,6 +963,12 @@ if (logOPtions ==1) {
 
 
     }
+    else {
+        printf ("this account doesn't exist , try again : ");
+        goto logIn;
+
+
+    }
 
 
 }
@@ -982,7 +998,8 @@ else if (logOPtions==2) {
                 //adnaneothmane@gmail.com
             }
         }
-}
+    }
+
 
     if (validEmail &&validEmailPreA&&validEmailDOtcom &&validEmailSize>0) {
         printf ("\nPlease choose a password (The password should be consisted of 8 numbers or more):  ");
@@ -992,6 +1009,15 @@ else if (logOPtions==2) {
     //THIS STEP IS DONE , possible bugs are just character lenght
 
     if (characterCounter (password,'\0')>7) {
+
+                        ///saving the email
+            FILE *emailSave = fopen("acount.txt","w");
+            fprintf (emailSave,"%s\n",email);
+            fprintf (emailSave,"%s",password);
+            fclose(emailSave);
+
+
+
             FILE *sendVerification = fopen ("VerificationCode.txt","w");
             srand (time(NULL));
             int tempVerification = rand()%9000+ 1000;
@@ -1000,6 +1026,7 @@ else if (logOPtions==2) {
             printf ("\nPlease enter the verification code you've got : ");
             verificationFailed :
             scanf ("%d",&verification);
+
             if (tempVerification==verification)  {
                 printf ("Congratulations! you're account is ready to go");
                 goto logIn;
