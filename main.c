@@ -33,7 +33,8 @@ char choice[10];
 
 int tasksize=0;
 int lastthree = 0;
-
+int finished = 0;
+int unfinished = 0;
 ///////////////////:hado 5asahom 5Dma dok functions
 
 
@@ -72,8 +73,27 @@ int ctottal = cday+(cmonth*30)+(cyear*365);
 return deadLineTotal-ctottal;
 
 
+
 }
 
+void deadlinestate (int tc){
+
+ if (timediff(tc)<=0) {
+    printf("state: finalisée\n");
+    finished ++;
+
+ }
+ else if (timediff(tc)<15) {
+    unfinished++;
+  printf("state: en cours de réalisation\n");
+ }
+ else {
+    printf("state: à réaliser\n");
+        unfinished++;
+
+ }
+
+}
 
 int TaskShow(char yourchoice) {
 
@@ -218,16 +238,20 @@ int TaskShow(char yourchoice) {
 
         printf("\nTitle: %s\n", stuff[k].title);
         printf("ID: %d\n", stuff[k].id);
-        printf("Priority: %c\n", stuff[k].Prio);
+        printf("Task Priority is: %c\n", stuff[k].Prio);
         printf("Description: \n%s\n", stuff[k].desc);
         printf("Tags: %s\n", stuff[k].tages);
+        deadlinestate(k);
         printf("Collaborators: %s\n", stuff[k].colab);
-        printf("Deadlines: %d\%d\%d\n", stuff[k].deadLine[0], stuff[k].deadLine[1], stuff[k].deadLine[2]);
-        printf("DeadlineStarts: %d\%d\%d\n", stuff[k].deadLineStart[0], stuff[k].deadLineStart[1], stuff[k].deadLineStart[2]);
+        printf("Deadlines: %d\\%d\\%d\n", stuff[k].deadLine[0], stuff[k].deadLine[1], stuff[k].deadLine[2]);
+        printf("task start : %d\\%d\\%d\n", stuff[k].deadLineStart[0], stuff[k].deadLineStart[1], stuff[k].deadLineStart[2]);
 
 
     }
-            printf("\nTotal Tasks: %d\n",tasksize);
+            printf("\n \n Total Tasks: %d\n",tasksize);
+            printf("\n Total complated tasks: %d\n",finished);
+            printf("\n Total uncomplated tasks: %d\n",unfinished);
+
 
 }
 
@@ -342,6 +366,12 @@ if (logOPtions ==1) {
                     printf ("Invalid date,try again : ");
                     goto deadLineStart;
                 }
+                //still need to enter other values
+                else if (holder.deadLineStart[0]-holder.deadLine[0] >0 ) {
+                         printf ("please enter a valid value : ");
+                         goto deadLineStart;
+                    }
+
                 printf ("\nAdd a priority (or leave blank for low priority): \n choice 1 : critical priority \n choice 2 : high priority \n choice 3 : natural priority \n choice 4 : low priority\n");
 
                 printf ("\nMy choice : ");
