@@ -32,6 +32,7 @@ char choice[10];
 
 
 int tasksize=0;
+int lastthree = 0;
 
 ///////////////////:hado 5asahom 5Dma dok functions
 
@@ -54,13 +55,25 @@ int taskSave () {
 
 
     fclose (taskfile);
-    tasksize++;
+}
+
+int timediff( int tc){
+
+time_t timsec = time(NULL);
+struct tm mytime = *localtime(&timsec);
+
+int deadLineTotal = (stuff[tc].deadLine[2]+(stuff[tc].deadLine[1] * 30) + (stuff[tc].deadLine[0] * 365) );
+int cday = mytime.tm_mday;
+int cmonth = mytime.tm_mon + 1;
+int cyear = mytime.tm_year + 1900;
+
+int ctottal = cday+(cmonth*30)+(cyear*365);
+
+return deadLineTotal-ctottal;
+
 
 }
 
-int taskPlacement(const void *a, const void *b) {
-    return strcmp(((const task *)a)->title, ((const task *)b)->title);
-}
 
 int TaskShow(char yourchoice) {
 
@@ -86,12 +99,17 @@ int TaskShow(char yourchoice) {
         fscanf(taskfile, " %39[^\n]", stuff[tasksize].colab);
 
         tasksize++;
+        if (choice[6]=='5') {
+            lastthree = tasksize-3;
+            if (lastthree<0) lastthree = 0;
+        }
+
     }
 
     fclose(taskfile);
 
     // this is where I sort the taskss
-
+        //alpha
          if (choice[6]== '1') {
 
             for (int i = 0;i <tasksize;i++) {
@@ -106,13 +124,14 @@ int TaskShow(char yourchoice) {
                 }
 
             }
-
+        //creation date
          else if (choice[6]== '4') {
 
 
             goto prnt;
 
          }
+         //priority
          else if (choice[6]=='3') {
 
             for (int i = 0;i <tasksize;i++) {
@@ -127,28 +146,89 @@ int TaskShow(char yourchoice) {
                     }
                 }
          }
-//         // still choice 2 deadline anc choice 5 3 days
-//         else if (choice[6]=='2') {
+         // still choice 2 deadline anc choice 5 3 days
+         //deadline 2
+         else if (choice[6]=='2'||choice[6]=='5' ) {
+           // task = 9 ; task = 3 ; task - somthing = 9-5 so they need to be 3 apart
+
+            for (int i = 0;i <tasksize;i++) {
+                    for (int k=0; k<tasksize-i-1;k++) {
+
+                        if (stuff[k].deadLine[0]>stuff[k+1].deadLine[0]) {
+
+                            temp= stuff[k];
+                            stuff[k] = stuff[k+1];
+                            stuff[k+1]= temp;
+                            }
+                        else if (stuff[k].deadLine[0]==stuff[k+1].deadLine[0]) {
+                                if (stuff[k].deadLine[1]>stuff[k+1].deadLine[1]) {
+                                        temp= stuff[k];
+                                        stuff[k] = stuff[k+1];
+                                        stuff[k+1]= temp;
+                                }
+                                    else if (stuff[k].deadLine[1]==stuff[k+1].deadLine[1]) {
+
+                                        if (stuff[k].deadLine[2]>stuff[k+1].deadLine[2]) {
+
+                                            temp= stuff[k];
+                                            stuff[k] = stuff[k+1];
+                                            stuff[k+1]= temp;
+                                         }
+
+                                    }
+
+                                }
+
+                        }
+
+
+             }
+          }
+          //deadline 3 days (6)
+           if (choice[6]== '6') {
+
+                  for (int k=0; k<tasksize;k++) {
+                        printf ("lopp enetered");
+                     if (timediff(k)<=3 && timediff(k)>0 ) {
+
+                            printf("\nTitle: %s\n", stuff[k].title);
+                            printf("ID: %d\n", stuff[k].id);
+                            printf("Priority: %c\n", stuff[k].Prio);
+                            printf("Deadlines: %d %d %d\n", stuff[k].deadLine[0], stuff[k].deadLine[1], stuff[k].deadLine[2]);
+                            printf("DeadlineStarts: %d %d %d\n", stuff[k].deadLineStart[0], stuff[k].deadLineStart[1], stuff[k].deadLineStart[2]);
+                            printf("Description: %s\n", stuff[k].desc);
+                            printf("Tags: %s\n", stuff[k].tages);
+                            printf("Collaborators: %s\n", stuff[k].colab);
+
+                            }
+                        }
+                 return 0;
+          }
+
+
+//                if (timediff[k]<=3 && timediff[k]>0 ) {
 //
 //
-//
-//
-//
-//
-//         }
+//                }
+
 
 
         prnt :
-    for (int k = 0; k < tasksize; k++) {
+    for (int k = 0; k < tasksize-lastthree; k++) {
+
         printf("\nTitle: %s\n", stuff[k].title);
         printf("ID: %d\n", stuff[k].id);
         printf("Priority: %c\n", stuff[k].Prio);
-        printf("Deadlines: %d %d %d\n", stuff[k].deadLine[0], stuff[k].deadLine[1], stuff[k].deadLine[2]);
-        printf("DeadlineStarts: %d %d %d\n", stuff[k].deadLineStart[0], stuff[k].deadLineStart[1], stuff[k].deadLineStart[2]);
-        printf("Description: %s\n", stuff[k].desc);
+        printf("Description: \n%s\n", stuff[k].desc);
         printf("Tags: %s\n", stuff[k].tages);
         printf("Collaborators: %s\n", stuff[k].colab);
+        printf("Deadlines: %d\%d\%d\n", stuff[k].deadLine[0], stuff[k].deadLine[1], stuff[k].deadLine[2]);
+        printf("DeadlineStarts: %d\%d\%d\n", stuff[k].deadLineStart[0], stuff[k].deadLineStart[1], stuff[k].deadLineStart[2]);
+
+
     }
+            printf("\nTotal Tasks: %d\n",tasksize);
+
 }
 
 
@@ -371,7 +451,8 @@ if (logOPtions ==1) {
                 printf ("________________________>>Show Task!<<_____________________________\n");
 
 
-                    printf ("Choice 1 : sort alphabetically\n Choice 2 : sort by deadline \n Choice 3 : sort by priority \n Choice 4 : sort by creation date \n Choice 5 : Show tasks whose deadline is in 3 days or less. \n My choice : ");
+                    printf ("Choice 1 : sort alphabetically\n Choice 2 : sort by deadline \n Choice 3 : sort by priority \n Choice 4 : sort by creation date \n Choice 5 : Show 3 tasks by deadLine : ");
+                    printf ("\n Choice 6 : Show tasks whose deadline is in 3 days or less. \n My choice :");
                     sortOp:
                     scanf(" %c",&choice[6]);
                     switch (choice[6]) {
@@ -380,6 +461,7 @@ if (logOPtions ==1) {
                         case '3': TaskShow (choice[6]); break;
                         case '4': TaskShow (choice[6]); break;
                         case '5': TaskShow (choice[6]); break;
+                        case '6': TaskShow (choice[6]); break;
 
                         default :
                             printf ("Invalid Choice , Please try again : ");
