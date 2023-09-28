@@ -80,16 +80,16 @@ return deadLineTotal-ctottal;
 void deadlinestate (int tc){
 
  if (timediff(tc)<=0) {
-    printf("state: finalisée\n");
+    printf("state: finalisï¿½e\n");
     finished ++;
 
  }
  else if (timediff(tc)<15) {
     unfinished++;
-  printf("state: en cours de réalisation\n");
+  printf("state: en cours de rï¿½alisation\n");
  }
  else {
-    printf("state: à réaliser\n");
+    printf("state: ï¿½ rï¿½aliser\n");
         unfinished++;
 
  }
@@ -508,6 +508,7 @@ int validEmail=0;
 int validEmailDOtcom=0;
 int validEmailPreA =0;
 int existAcc = 0;
+int atempts = 0;
 char email[40],password[40],logMail[40],logPass[40];
 
 
@@ -964,8 +965,21 @@ if (logOPtions ==1) {
 
     }
     else {
-        printf ("this account doesn't exist , try again : ");
+        printf ("this account doesn't exist, do you want to create an acount ? (Y/N) ",3-atempts);
+        scanf (" %s",&choice[9]);
+        if (choice[9]== 'Y' ||choice[9]== 'y') goto creatacc;
+        else {
+
+            atempts++;
+        if (atempts==3) {
+            printf ("you have no attempts left ,try again in 5 minutes");
+            Sleep (300000);
+            atempts=0;
+        }
         goto logIn;
+
+        }
+
 
 
     }
@@ -975,6 +989,7 @@ if (logOPtions ==1) {
 
 //I'm here on acount creation step
 else if (logOPtions==2) {
+        creatacc:
     printf ("\nPlease enter your email : ");
     emailFailed :
     scanf ("%s",email);
